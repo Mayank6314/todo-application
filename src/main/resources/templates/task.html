@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Todo Application</title>
@@ -7,9 +7,20 @@
 <body>
 
        <form action="/addtodo" method="post">
-       <input type="text" name="taskContent" placeholder="write the task">
-       <button type="submit">Submit</button>
+           <input type="text" name="taskContent" placeholder="write the task"/>
+           <button type="submit">Submit</button>
        </form>
+
+<ul>
+    <li th:each="todo : ${listoftodos}">
+        <form th:action="@{updatetodo/{id}(id=${todo.id})}" method="post">
+           <input type="text" th:value="${todo.taskContent}" name="taskContent"/>
+           <input type="checkbox" th:checked="${todo.completionStatus}" name="completionStatus" onchange="this.form.submit()">
+           <button type="submit">UPDATE</button>
+        </form>
+        <a th:href="@{/deleteTODO/{id}(id=${todo.id})}">DELETE</a>
+    </li>
+</ul>
 
 </body>
 </html>

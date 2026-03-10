@@ -5,10 +5,7 @@ import com.example.TODO_Application.services.TODOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,30 +15,33 @@ public class TODOController {
     @Autowired
     TODOService todoService;
 
+    @RequestMapping("/")
+    public String getAllTodo(Model model){
+        List<Todo> listOfTodos = todoService.getAllTodos();
+        model.addAttribute("listoftodos", listOfTodos);
+        return "task";
+    }
+
     @RequestMapping(value="/addtodo", method = RequestMethod.POST)
     @ResponseBody
     public String createTodo(@ModelAttribute Todo todo){
-        todoService.saveTodo(todo);
+
+        todoService.saveTODO(todo);
         return "success";
     }
 
-    @RequestMapping
-    public String loadForm(){
-        return "task";
+
+    @RequestMapping(value="/updatetodo/{id}")
+    public String updateTodo(@PathVariable("id") Long id, @ModelAttribute Todo todo){
+        todoService.updateTodo(id, todo);
+        return "redirect:/";
     }
 
-//    public String updateTodo(){
-//
-//    }
-//
-//    public String deleteTodo(){
-//
-//    }
-//
-    @RequestMapping
-    public String getAllTodo(Model model){
-        List<Todo> listOfTodos = todoService.getallTodos();
-        model.addAttribute("listOfTodos", listOfTodos);
-        return "task";
+    @RequestMapping("/deleteTODO/{id}")
+    public String deleteTodo(@PathVariable("id") Long id){
+        todoService.deleteTODO(id);
+        return "redirect:/";
     }
+
+
 }
